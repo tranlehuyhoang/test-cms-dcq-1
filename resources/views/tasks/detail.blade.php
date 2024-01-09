@@ -335,69 +335,60 @@
 
                             <div class="clerfix"></div>
 
-                            <div class="d-flex">
-                                <img class="me-2 rounded-circle" src="/assets/images/users/avatar-3.jpg"
-                                    alt="Generic placeholder image" height="32">
-                                <div class="flex-1">
-                                    <h5 class="mt-0">Barry Gould <small class="text-muted fw-normal float-end">5 hours
-                                            ago</small></h5>
-                                    Nice work, makes me think of The Money Pit.
 
-                                    <br />
-                                    <a href="javascript: void(0);" class="text-muted font-13 d-inline-block mt-2"><i
-                                            class="mdi mdi-reply"></i> Reply</a>
 
-                                    <div class="d-flex align-items-start mt-3">
-                                        <a class="pe-2" href="#">
-                                            <img src="/assets/images/users/avatar-4.jpg" class="rounded-circle"
-                                                alt="Generic placeholder image" height="32">
-                                        </a>
-                                        <div class="flex-1">
-                                            <h5 class="mt-0">Louis Hill <small class="text-muted fw-normal float-end">3
-                                                    hours ago</small></h5>
-                                            i'm in the middle of a timelapse animation myself! (Very different though.)
-                                            Awesome stuff.
 
-                                            <br />
-                                            <a href="javascript: void(0);" class="text-muted font-13 d-inline-block mt-2">
-                                                <i class="mdi mdi-reply"></i> Reply
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="d-flex align-items-start mt-3">
-                                <img class="me-2 rounded-circle" src="/assets/images/users/avatar-5.jpg"
-                                    alt="Generic placeholder image" height="32">
-                                <div class="flex-1">
-                                    <h5 class="mt-0">Aaron Wilson <small class="text-muted fw-normal float-end">1 day
-                                            ago</small></h5>
-                                    It would be very nice to have.
-
-                                    <br />
-                                    <a href="javascript: void(0);" class="text-muted font-13 d-inline-block mt-2"><i
-                                            class="mdi mdi-reply"></i> Reply</a>
-                                </div>
-                            </div>
                             @foreach ($taskComments as $taskComment)
                                 <div class="d-flex align-items-start mt-3">
                                     <img class="me-2 rounded-circle" src="/assets/images/users/avatar-5.jpg"
                                         alt="Generic placeholder image" height="32">
                                     <div class="flex-1">
-                                        <h5 class="mt-0">{{ $taskComment->user->name }} <small
+                                        <h5 class="mt-0">{{ $taskComment->user->name }}
+                                            @if ($taskComment->user->id == $user_id)
+                                                (you)
+                                            @endif
+
+                                            <small
                                                 class="text-muted fw-normal float-end">{{ $taskComment->created_at->diffForHumans() }}</small>
                                         </h5>
                                         {{ $taskComment->content }}
 
                                         <br />
-                                        <a href="javascript: void(0);" class="text-muted font-13 d-inline-block mt-2"><i
-                                                class="mdi mdi-reply"></i> Reply</a>
-                                    </div>
-                                </div>
-                                <div>
+                                        <a href="javascript:void(0);" class="text-muted font-13 d-inline-block mt-2"
+                                            onclick="setReplyId({{ $taskComment->id }}, '{{ $taskComment->user->name }}');">
+                                            <i class="mdi mdi-reply"></i> Reply
+                                        </a>
+                                        @foreach ($taskCommentsWithReplys as $taskCommentsWithReply)
+                                            @if ($taskCommentsWithReply->reply_id == $taskComment->id)
+                                                <div class="d-flex align-items-start mt-3">
+                                                    <a class="pe-2" href="#">
+                                                        <img src="/assets/images/users/avatar-5.jpg"
+                                                            class="rounded-circle" alt="Generic placeholder image"
+                                                            height="32">
+                                                    </a>
+                                                    <div class="flex-1">
+                                                        <h5 class="mt-0">{{ $taskCommentsWithReply->user->name }}
+                                                            @if ($taskCommentsWithReply->user->id == $user_id)
+                                                                (you)
+                                                            @endif
 
-                                    <!-- Hiển thị các thuộc tính khác của TaskComment -->
+                                                            <small class="text-muted fw-normal float-end">
+                                                                {{ $taskCommentsWithReply->created_at->diffForHumans() }}</small>
+                                                        </h5>
+                                                        <strong>@</strong><strong>{{ $taskComment->user->name }}
+                                                            :</strong>
+                                                        {{ $taskCommentsWithReply->content }}
+
+                                                        <br />
+                                                        <a href="javascript: void(0);"
+                                                            class="text-muted font-13 d-inline-block mt-2">
+                                                            <i class="mdi mdi-reply"></i> Reply
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            @endif
+                                        @endforeach
+                                    </div>
                                 </div>
                             @endforeach
                             <div class="text-center mt-2">
@@ -405,13 +396,21 @@
                                         class="mdi mdi-spin mdi-loading me-1"></i> Load more </a>
                             </div>
 
+                            <style>
+                                #boldText {
+                                    font-weight: bold;
+                                }
+                            </style>
                             <div class="border rounded mt-4">
+                                <span id="boldText"></span>
                                 <form action="{{ route('taskcomment.create') }}" class="comment-area-box"
                                     method="POST">
                                     @csrf
                                     <input type="number" hidden name="task_id" value="{{ $task_id }}">
-                                    <input type="number" hidden name="reply_id" value="0">
-                                    <textarea name="content" rows="3" class="form-control border-0 resize-none" placeholder="Your comment..."></textarea>
+                                    <input type="number" hidden name="reply_id" value="0" id="reply_id">
+
+                                    <textarea name="content" id="comment_content" rows="3" class="form-control border-0 resize-none"
+                                        placeholder="Your comment..."></textarea>
                                     <div class="p-2 bg-light d-flex justify-content-between align-items-center">
                                         <div>
                                             <a href="#" class="btn btn-sm px-1 btn-light"><i
@@ -423,6 +422,15 @@
                                                 class="fe-send me-1"></i>Submit</button>
                                     </div>
                                 </form>
+
+                                <script>
+                                    function setReplyId(userId, userName) {
+                                        console.log('userId', userId);
+                                        document.getElementById('reply_id').value = userId;
+                                        var boldText = document.getElementById('boldText');
+                                        boldText.innerHTML = 'Reply: <strong>' + userName + '</strong>';
+                                    }
+                                </script>
                             </div> <!-- end .border-->
 
                         </div> <!-- end card-body-->

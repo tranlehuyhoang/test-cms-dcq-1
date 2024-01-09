@@ -57,14 +57,27 @@ class TaskController extends BaseController
 		$data['taskComments'] = TaskComment::where('task_id', '=', $request->id)->get();
 
 		$data['users'] = User::whereIn('id', $data['taskComments']->pluck('create_by'))->get();
+		$data['user_id'] =  Auth::user()->id;
 
 		$data['taskComments'] = TaskComment::with('user')
 			->where('task_id', $request->id)
+			->where('reply_id', 0)
 			->orderBy('created_at', 'desc')
 			->get();
 
 		// Chuyển đổi múi giờ và định dạng thời gian cho mỗi TaskComment
 		foreach ($data['taskComments'] as $taskComment) {
+			$createdDate = \Carbon\Carbon::parse($taskComment->created_at)->setTimezone('Asia/Ho_Chi_Minh');
+			$taskComment->diffForHumansInVietnam = $createdDate->diffForHumans();
+		}
+		$data['taskCommentsWithReplys'] = TaskComment::with('user')
+			->where('task_id', $request->id)
+			->where('reply_id', '!=', 0)
+			->orderBy('created_at', 'desc')
+			->get();
+
+		// Chuyển đổi múi giờ và định dạng thời gian cho mỗi TaskComment có reply_id khác 0
+		foreach ($data['taskCommentsWithReplys'] as $taskComment) {
 			$createdDate = \Carbon\Carbon::parse($taskComment->created_at)->setTimezone('Asia/Ho_Chi_Minh');
 			$taskComment->diffForHumansInVietnam = $createdDate->diffForHumans();
 		}
