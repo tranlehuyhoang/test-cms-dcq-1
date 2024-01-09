@@ -345,7 +345,7 @@
                                     <div class="flex-1">
                                         <h5 class="mt-0">{{ $taskComment->user->name }}
                                             @if ($taskComment->user->id == $user_id)
-                                                (you)
+                                                <span style="color: red">(you)</span>
                                             @endif
 
                                             <small
@@ -369,19 +369,19 @@
                                                     <div class="flex-1">
                                                         <h5 class="mt-0">{{ $taskCommentsWithReply->user->name }}
                                                             @if ($taskCommentsWithReply->user->id == $user_id)
-                                                                (you)
+                                                                <span style="color: red">(you)</span>
                                                             @endif
 
                                                             <small class="text-muted fw-normal float-end">
                                                                 {{ $taskCommentsWithReply->created_at->diffForHumans() }}</small>
                                                         </h5>
-                                                        <strong>@</strong><strong>{{ $taskComment->user->name }}
-                                                            :</strong>
+
                                                         {{ $taskCommentsWithReply->content }}
 
                                                         <br />
-                                                        <a href="javascript: void(0);"
-                                                            class="text-muted font-13 d-inline-block mt-2">
+                                                        <a href="javascript:void(0);"
+                                                            class="text-muted font-13 d-inline-block mt-2"
+                                                            onclick="setReplyId({{ $taskComment->id }}, '{{ $taskCommentsWithReply->user->name }}');">
                                                             <i class="mdi mdi-reply"></i> Reply
                                                         </a>
                                                     </div>
@@ -428,7 +428,7 @@
                                         console.log('userId', userId);
                                         document.getElementById('reply_id').value = userId;
                                         var boldText = document.getElementById('boldText');
-                                        boldText.innerHTML = 'Reply: <strong>' + userName + '</strong>';
+                                        document.getElementById('comment_content').value = '@' + userName + ' : ';
                                     }
                                 </script>
                             </div> <!-- end .border-->

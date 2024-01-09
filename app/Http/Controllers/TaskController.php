@@ -73,7 +73,7 @@ class TaskController extends BaseController
 		$data['taskCommentsWithReplys'] = TaskComment::with('user')
 			->where('task_id', $request->id)
 			->where('reply_id', '!=', 0)
-			->orderBy('created_at', 'desc')
+			->orderBy('created_at', 'asc')
 			->get();
 
 		// Chuyển đổi múi giờ và định dạng thời gian cho mỗi TaskComment có reply_id khác 0
