@@ -357,84 +357,75 @@
                                             onclick="setReplyId({{ $taskComment->id }}, '{{ $taskComment->user->name }}');">
                                             <i class="mdi mdi-reply"></i> Reply
                                         </a>
+                                        <a href="javascript:void(0);" class="text-muted font-13 d-inline-block mt-2">
+                                            <i
+                                                class="mdi  mdi-arrow-down
+                                            "></i>
+                                            Xem 1 phản hồi
+                                        </a>
+                                        @foreach ($taskCommentsWithReplys as $taskCommentWithReply)
+                                            @if ($taskCommentWithReply->reply_id == $taskComment->id)
+                                                <div class="d-flex align-items-start mt-3">
+                                                    <a class="pe-2" href="#">
+                                                        <img src="/assets/images/users/avatar-5.jpg"
+                                                            class="rounded-circle" alt="Generic placeholder image"
+                                                            height="32">
+                                                    </a>
+                                                    <div class="flex-1">
+                                                        <h5 class="mt-0">{{ $taskCommentWithReply->user->name }}
+                                                            @if ($taskCommentWithReply->user->id == $user_id)
+                                                                <span style="color: red">(you)</span>
+                                                            @endif
+                                                            <small
+                                                                class="text-muted fw-normal float-end">{{ $taskCommentWithReply->created_at->diffForHumans() }}</small>
+                                                        </h5>
+                                                        {{ $taskCommentWithReply->content }}
 
-                                        @if ($taskComment->replyCount > 0)
-                                            <a href="javascript:void(0);" class="text-muted font-13 d-inline-block mt-2"
-                                                onclick="getReplyComments({{ $taskComment->id }});">
-                                                <i class="mdi mdi-arrow-down"></i>
-                                                Xem {{ $taskComment->replyCount }} phản hồi
-                                            </a>
-                                        @endif
-                                        <div id="child_{{ $taskComment->id }}"></div>
+                                                        <br />
+                                                        <a href="javascript:void(0);"
+                                                            class="text-muted font-13 d-inline-block mt-2"
+                                                            onclick="setReplyId({{ $taskCommentWithReply->id }}, '{{ $taskCommentWithReply->user->name }}');">
+                                                            <i class="mdi mdi-reply"></i> Reply
+                                                        </a>
+                                                        <a href="javascript:void(0);"
+                                                            class="text-muted font-13 d-inline-block mt-2">
+                                                            <i
+                                                                class="mdi  mdi-arrow-down
+                                                            "></i>
+                                                            Xem 1 phản hồi
+                                                        </a>
+                                                        @foreach ($taskCommentsWithReplys as $taskCommentWithReply2)
+                                                            @if ($taskCommentWithReply2->reply_id == $taskCommentWithReply->id)
+                                                                <div class="d-flex align-items-start mt-3">
+                                                                    <a class="pe-2" href="#">
+                                                                        <img src="/assets/images/users/avatar-5.jpg"
+                                                                            class="rounded-circle"
+                                                                            alt="Generic placeholder image"
+                                                                            height="32">
+                                                                    </a>
+                                                                    <div class="flex-1">
+                                                                        <h5 class="mt-0">
+                                                                            {{ $taskCommentWithReply2->user->name }}
+                                                                            @if ($taskCommentWithReply2->user->id == $user_id)
+                                                                                <span style="color: red">(you)</span>
+                                                                            @endif
+                                                                            <small
+                                                                                class="text-muted fw-normal float-end">{{ $taskCommentWithReply2->created_at->diffForHumans() }}</small>
+                                                                        </h5>
+                                                                        {{ $taskCommentWithReply2->content }}
+                                                                        <br />
+
+                                                                    </div>
+                                                                </div>
+                                                            @endif
+                                                        @endforeach
+                                                    </div>
+                                                </div>
+                                            @endif
+                                        @endforeach
                                     </div>
                                 </div>
                             @endforeach
-
-                            <script>
-                                function getReplyComments(taskCommentId) {
-                                    // Gửi yêu cầu AJAX POST
-                                    var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-
-                                    $.ajax({
-                                        url: '{{ route('taskcomment.getcommentlevel2') }}',
-                                        method: 'POST',
-                                        data: {
-                                            taskCommentId: taskCommentId,
-                                            _token: csrfToken // Thêm mã CSRF vào yêu cầu
-                                        },
-                                        success: function(response) {
-                                            console.log(response.replyComments.taskComments)
-                                            // Xử lý dữ liệu phản hồi từ server
-                                            var data = response.replyComments.taskComments;
-                                            var html = '';
-
-                                            // Tạo HTML cho dữ liệu
-                                            data.map(function(taskComment) {
-                                                html += '   <div class="d-flex align-items-start mt-3"> \
-                                                                                                        <img class="me-2 rounded-circle" src="/assets/images/users/avatar-5.jpg" \
-                                                                                                            alt="Generic placeholder image" height="32"> \
-                                                                                                            <div class="flex-1"> \
-                                                        <h5 class="mt-0">' + taskComment.user.name;
-
-                                                if (taskComment.user.id == taskComment.user.id) {
-                                                    html += '   <span style="color: red">(you)</span>';
-                                                }
-
-                                                html += '           <small class="text-muted fw-normal float-end">' +
-                                                    taskComment.diffForHumansInVietnam + '</small> \
-                                                                                                            </h5> \
-                                                                                                            ' + taskComment.content + ' \
-                                                                                                            <br /> \
-                                                                                                            <a href="javascript:void(0);" class="text-muted font-13 d-inline-block mt-2" \
-                                                                                                                onclick="setReplyId(' + taskComment
-                                                    .id + ', \'' + taskComment
-                                                    .user.name + '\');"> \
-                                                                                                                <i class="mdi mdi-reply"></i> Reply \
-                                                                                                            </a>';
-
-                                                if (taskComment.replyCount > 0) {
-                                                    html += '   <a href="javascript:void(0);" class="text-muted font-13 d-inline-block mt-2" \
-                                                                                                            onclick="getReplyComments(' +
-                                                        taskComment.id + ');"> \
-                                                                                                            <i class="mdi mdi-arrow-down"></i> \
-                                                                                                            Xem ' + taskComment.replyCount + ' phản hồi \
-                                                                                                        </a>';
-                                                }
-
-                                                html += '       <div id="child_' + taskComment.id + '"></div> \
-                                                                                                        </div> \
-                                                                                                    </div>';
-                                            });
-                                            // Hiển thị dữ liệu trong phần tử div
-                                            $('#child_' + taskCommentId).html(html);
-                                        },
-                                        error: function(xhr, status, error) {
-                                            // Xử lý lỗi
-                                            console.error(error);
-                                        }
-                                    });
-                                }
-                            </script>
                             <div class="text-center mt-2">
                                 <a href="javascript:void(0);" class="text-danger"><i
                                         class="mdi mdi-spin mdi-loading me-1"></i> Load more </a>
