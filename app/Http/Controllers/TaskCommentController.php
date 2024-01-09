@@ -82,6 +82,40 @@ class TaskCommentController extends Controller
             return response()->json(['message' => 'Task comment not found'], 404);
         }
     }
+    public function getcommentlevel3(Request $request)
+    {
+        $taskCommentId = $request->input('taskCommentId');
+
+        // Xử lý logic để xem taskCommentId và trả về kết quả phản hồi
+
+        // Ví dụ:
+
+        $data['taskComments'] = TaskComment::with('user')
+            ->where('reply_id', $taskCommentId)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        // Chuyển đổi múi giờ và định dạng thời gian cho mỗi TaskComment
+        foreach ($data['taskComments'] as $taskComment) {
+            $createdDate = \Carbon\Carbon::parse($taskComment->created_at)->setTimezone('Asia/Ho_Chi_Minh');
+            $taskComment->diffForHumansInVietnam = $createdDate->diffForHumans();
+        }
+
+        $data['taskCommentsWithReplyCount'] = [];
+
+        foreach ($data['taskComments'] as $taskComment) {
+            $taskComment->replyCount = TaskComment::where('reply_id', $taskComment->id)->count();
+            $data['taskCommentsWithReplyCount'][] = $taskComment;
+        }
+
+        $taskComment = TaskComment::find($taskCommentId);
+        if ($taskComment) {
+            $replyComments = $taskComment->replyComments;
+            return response()->json(['replyComments' => $data], 200);
+        } else {
+            return response()->json(['message' => 'Task comment not found'], 404);
+        }
+    }
 
     public function show(TaskComment $taskComment)
     {

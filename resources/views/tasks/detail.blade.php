@@ -370,6 +370,7 @@
                                 </div>
                             @endforeach
 
+
                             <script>
                                 function getReplyComments(taskCommentId) {
                                     // Gửi yêu cầu AJAX POST
@@ -383,48 +384,115 @@
                                             _token: csrfToken // Thêm mã CSRF vào yêu cầu
                                         },
                                         success: function(response) {
-                                            console.log(response.replyComments.taskComments)
+                                            console.log(response.replyComments.taskComments);
                                             // Xử lý dữ liệu phản hồi từ server
                                             var data = response.replyComments.taskComments;
                                             var html = '';
 
                                             // Tạo HTML cho dữ liệu
                                             data.map(function(taskComment) {
-                                                html += '   <div class="d-flex align-items-start mt-3"> \
-                                                                                                        <img class="me-2 rounded-circle" src="/assets/images/users/avatar-5.jpg" \
-                                                                                                            alt="Generic placeholder image" height="32"> \
-                                                                                                            <div class="flex-1"> \
-                                                        <h5 class="mt-0">' + taskComment.user.name;
+                                                html +=
+                                                    '<div class="d-flex align-items-start mt-3"> \
+                                                                                                                                                                                                <img class="me-2 rounded-circle" src="/assets/images/users/avatar-5.jpg" \
+                                                                                                                                                                                                    alt="Generic placeholder image" height="32"> \
+                                                                                                                                                                                                <div class="flex-1"> \
+                                                                                                                                                                                                    <h5 class="mt-0">' +
+                                                    taskComment.user.name;
 
                                                 if (taskComment.user.id == taskComment.user.id) {
                                                     html += '   <span style="color: red">(you)</span>';
                                                 }
 
                                                 html += '           <small class="text-muted fw-normal float-end">' +
-                                                    taskComment.diffForHumansInVietnam + '</small> \
-                                                                                                            </h5> \
-                                                                                                            ' + taskComment.content + ' \
-                                                                                                            <br /> \
-                                                                                                            <a href="javascript:void(0);" class="text-muted font-13 d-inline-block mt-2" \
-                                                                                                                onclick="setReplyId(' + taskComment
-                                                    .id + ', \'' + taskComment
-                                                    .user.name + '\');"> \
-                                                                                                                <i class="mdi mdi-reply"></i> Reply \
-                                                                                                            </a>';
+                                                    taskComment.diffForHumansInVietnam +
+                                                    '</small> \
+                                                                                                                                                                                                </h5> \
+                                                                                                                                                                                                ' +
+                                                    taskComment.content +
+                                                    ' \
+                                                                                                                                                                                                <br /> \
+                                                                                                                                                                                                <a href="javascript:void(0);" class="text-muted font-13 d-inline-block mt-2" \
+                                                                                                                                                                                                    onclick="setReplyId(' +
+                                                    taskComment.id + ', \'' + taskComment.user.name +
+                                                    '\');"> \
+                                                                                                                                                                                                    <i class="mdi mdi-reply"></i> Reply \
+                                                                                                                                                                                                </a>';
 
                                                 if (taskComment.replyCount > 0) {
-                                                    html += '   <a href="javascript:void(0);" class="text-muted font-13 d-inline-block mt-2" \
-                                                                                                            onclick="getReplyComments(' +
-                                                        taskComment.id + ');"> \
-                                                                                                            <i class="mdi mdi-arrow-down"></i> \
-                                                                                                            Xem ' + taskComment.replyCount + ' phản hồi \
-                                                                                                        </a>';
+                                                    html +=
+                                                        '   <a href="javascript:void(0);" class="text-muted font-13 d-inline-block mt-2" \
+                                                                                                                                                                                                    onclick="getReplyComments1(' +
+                                                        taskComment.id +
+                                                        ');"> \
+                                                                                                                                                                                                    <i class="mdi mdi-arrow-down"></i> \
+                                                                                                                                                                                                    Xem ' +
+                                                        taskComment.replyCount +
+                                                        ' phản hồi \
+                                                                                                                                                                                                </a>';
                                                 }
 
-                                                html += '       <div id="child_' + taskComment.id + '"></div> \
-                                                                                                        </div> \
-                                                                                                    </div>';
+                                                html += '       <div id="child_' + taskComment.id +
+                                                    '"></div> \
+                                                                                                                                                                                                </div> \
+                                                                                                                                                                                            </div>';
                                             });
+
+                                            // Hiển thị dữ liệu trong phần tử div
+                                            $('#child_' + taskCommentId).html(html);
+                                        },
+                                        error: function(xhr, status, error) {
+                                            // Xử lý lỗi
+                                            console.error(error);
+                                        }
+                                    });
+                                }
+
+                                function getReplyComments1(taskCommentId) {
+                                    // Gửi yêu cầu AJAX POST
+                                    var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+                                    $.ajax({
+                                        url: '{{ route('taskcomment.getcommentlevel3') }}',
+                                        method: 'POST',
+                                        data: {
+                                            taskCommentId: taskCommentId,
+                                            _token: csrfToken // Thêm mã CSRF vào yêu cầu
+                                        },
+                                        success: function(response) {
+                                            console.log(response.replyComments.taskComments);
+                                            // Xử lý dữ liệu phản hồi từ server
+                                            var data = response.replyComments.taskComments;
+                                            var html = '';
+
+                                            // Tạo HTML cho dữ liệu
+                                            data.map(function(taskComment) {
+                                                html +=
+                                                    '<div class="d-flex align-items-start mt-3"> \
+                                        <img class="me-2 rounded-circle" src="/assets/images/users/avatar-5.jpg" \
+                                            alt="Generic placeholder image" height="32"> \
+                                        <div class="flex-1"> \
+                                            <h5 class="mt-0">' +
+                                                    taskComment.user.name;
+
+                                                if (taskComment.user.id == taskComment.user.id) {
+                                                    html += '   <span style="color: red">(you)</span>';
+                                                }
+
+                                                html += '           <small class="text-muted fw-normal float-end">' +
+                                                    taskComment.diffForHumansInVietnam +
+                                                    '</small> \
+                                        </h5> \
+                                        ' +
+                                                    taskComment.content +
+                                                    ' \
+                                        <br />';
+
+                                                html += '       <div id="child_' + taskComment.id +
+                                                    '"></div> \
+                                        </div> \
+                                    </div>';
+                                            });
+
                                             // Hiển thị dữ liệu trong phần tử div
                                             $('#child_' + taskCommentId).html(html);
                                         },
