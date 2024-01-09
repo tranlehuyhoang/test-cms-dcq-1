@@ -347,7 +347,6 @@
                                             @if ($taskComment->user->id == $user_id)
                                                 <span style="color: red">(you)</span>
                                             @endif
-
                                             <small
                                                 class="text-muted fw-normal float-end">{{ $taskComment->created_at->diffForHumans() }}</small>
                                         </h5>
@@ -358,8 +357,8 @@
                                             onclick="setReplyId({{ $taskComment->id }}, '{{ $taskComment->user->name }}');">
                                             <i class="mdi mdi-reply"></i> Reply
                                         </a>
-                                        @foreach ($taskCommentsWithReplys as $taskCommentsWithReply)
-                                            @if ($taskCommentsWithReply->reply_id == $taskComment->id)
+                                        @foreach ($taskCommentsWithReplys as $taskCommentWithReply)
+                                            @if ($taskCommentWithReply->reply_id == $taskComment->id)
                                                 <div class="d-flex align-items-start mt-3">
                                                     <a class="pe-2" href="#">
                                                         <img src="/assets/images/users/avatar-5.jpg"
@@ -367,23 +366,46 @@
                                                             height="32">
                                                     </a>
                                                     <div class="flex-1">
-                                                        <h5 class="mt-0">{{ $taskCommentsWithReply->user->name }}
-                                                            @if ($taskCommentsWithReply->user->id == $user_id)
+                                                        <h5 class="mt-0">{{ $taskCommentWithReply->user->name }}
+                                                            @if ($taskCommentWithReply->user->id == $user_id)
                                                                 <span style="color: red">(you)</span>
                                                             @endif
-
-                                                            <small class="text-muted fw-normal float-end">
-                                                                {{ $taskCommentsWithReply->created_at->diffForHumans() }}</small>
+                                                            <small
+                                                                class="text-muted fw-normal float-end">{{ $taskCommentWithReply->created_at->diffForHumans() }}</small>
                                                         </h5>
-
-                                                        {{ $taskCommentsWithReply->content }}
+                                                        {{ $taskCommentWithReply->content }}
 
                                                         <br />
                                                         <a href="javascript:void(0);"
                                                             class="text-muted font-13 d-inline-block mt-2"
-                                                            onclick="setReplyId({{ $taskComment->id }}, '{{ $taskCommentsWithReply->user->name }}');">
+                                                            onclick="setReplyId({{ $taskCommentWithReply->id }}, '{{ $taskCommentWithReply->user->name }}');">
                                                             <i class="mdi mdi-reply"></i> Reply
                                                         </a>
+                                                        @foreach ($taskCommentsWithReplys as $taskCommentWithReply2)
+                                                            @if ($taskCommentWithReply2->reply_id == $taskCommentWithReply->id)
+                                                                <div class="d-flex align-items-start mt-3">
+                                                                    <a class="pe-2" href="#">
+                                                                        <img src="/assets/images/users/avatar-5.jpg"
+                                                                            class="rounded-circle"
+                                                                            alt="Generic placeholder image"
+                                                                            height="32">
+                                                                    </a>
+                                                                    <div class="flex-1">
+                                                                        <h5 class="mt-0">
+                                                                            {{ $taskCommentWithReply2->user->name }}
+                                                                            @if ($taskCommentWithReply2->user->id == $user_id)
+                                                                                <span style="color: red">(you)</span>
+                                                                            @endif
+                                                                            <small
+                                                                                class="text-muted fw-normal float-end">{{ $taskCommentWithReply2->created_at->diffForHumans() }}</small>
+                                                                        </h5>
+                                                                        {{ $taskCommentWithReply2->content }}
+                                                                        <br />
+
+                                                                    </div>
+                                                                </div>
+                                                            @endif
+                                                        @endforeach
                                                     </div>
                                                 </div>
                                             @endif
