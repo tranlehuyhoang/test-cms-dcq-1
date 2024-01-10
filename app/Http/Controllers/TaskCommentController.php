@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\TaskComment;
+use App\Models\User;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -112,6 +113,40 @@ class TaskCommentController extends Controller
         if ($taskComment) {
             $replyComments = $taskComment->replyComments;
             return response()->json(['replyComments' => $data], 200);
+        } else {
+            return response()->json(['message' => 'Task comment not found'], 404);
+        }
+    }
+    public function pagination(Request $request)
+    {
+        $id_pagination = $request->input('pageId');
+        $task_id = $request->input('taskId');
+
+        $data['taskComments'] = TaskComment::with('user')
+            ->where('task_id', $task_id)
+            ->where('reply_id', 0)
+            ->orderBy('created_at', 'desc')
+            ->skip($id_pagination * 3) // Skip the initial comments based on the pagination ID
+            ->take(3) // Retrieve a total of 6 comments (3 initial + 3 additional)
+            ->get();
+
+        // Chuyển đổi múi giờ và định dạng thời gian cho mỗi TaskComment
+        foreach ($data['taskComments'] as $taskComment) {
+            $createdDate = \Carbon\Carbon::parse($taskComment->created_at)->setTimezone('Asia/Ho_Chi_Minh');
+            $taskComment->diffForHumansInVietnam = $createdDate->diffForHumans();
+        }
+
+
+
+        foreach ($data['taskComments'] as $taskComment) {
+            $taskComment->replyCount = TaskComment::where('reply_id', $taskComment->id)->count();
+        }
+        // Chuyển đổi múi giờ và định dạng thời gian cho mỗi TaskComment có reply_id khác 0
+
+        // Chuyển đổi múi giờ và định dạng thời gian cho mỗi TaskComment có reply_id khác 0
+
+        if ($taskComment) {
+            return response()->json(['taskComments' => $data], 200);
         } else {
             return response()->json(['message' => 'Task comment not found'], 404);
         }

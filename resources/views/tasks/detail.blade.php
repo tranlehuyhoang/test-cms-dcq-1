@@ -369,7 +369,11 @@
                                     </div>
                                 </div>
                             @endforeach
-
+                            <div id="pagination"></div>
+                            <div class="text-center mt-2">
+                                <a href="javascript:void(0);" onclick="pagination(1,{{ $task_id }})"
+                                    class="text-danger"><i class="mdi mdi-spin mdi-loading me-1"></i> Load more </a>
+                            </div>
 
                             <script>
                                 function getReplyComments(taskCommentId) {
@@ -393,10 +397,10 @@
                                             data.map(function(taskComment) {
                                                 html +=
                                                     '<div class="d-flex align-items-start mt-3"> \
-                                                                                                                                                                                                <img class="me-2 rounded-circle" src="/assets/images/users/avatar-5.jpg" \
-                                                                                                                                                                                                    alt="Generic placeholder image" height="32"> \
-                                                                                                                                                                                                <div class="flex-1"> \
-                                                                                                                                                                                                    <h5 class="mt-0">' +
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <img class="me-2 rounded-circle" src="/assets/images/users/avatar-5.jpg" \
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        alt="Generic placeholder image" height="32"> \
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <div class="flex-1"> \
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <h5 class="mt-0">' +
                                                     taskComment.user.name;
 
                                                 if (taskComment.user.id == taskComment.user.id) {
@@ -406,35 +410,35 @@
                                                 html += '           <small class="text-muted fw-normal float-end">' +
                                                     taskComment.diffForHumansInVietnam +
                                                     '</small> \
-                                                                                                                                                                                                </h5> \
-                                                                                                                                                                                                ' +
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </h5> \
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    ' +
                                                     taskComment.content +
                                                     ' \
-                                                                                                                                                                                                <br /> \
-                                                                                                                                                                                                <a href="javascript:void(0);" class="text-muted font-13 d-inline-block mt-2" \
-                                                                                                                                                                                                    onclick="setReplyId(' +
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <br /> \
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <a href="javascript:void(0);" class="text-muted font-13 d-inline-block mt-2" \
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        onclick="setReplyId(' +
                                                     taskComment.id + ', \'' + taskComment.user.name +
                                                     '\');"> \
-                                                                                                                                                                                                    <i class="mdi mdi-reply"></i> Reply \
-                                                                                                                                                                                                </a>';
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <i class="mdi mdi-reply"></i> Reply \
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </a>';
 
                                                 if (taskComment.replyCount > 0) {
                                                     html +=
                                                         '   <a href="javascript:void(0);" class="text-muted font-13 d-inline-block mt-2" \
-                                                                                                                                                                                                    onclick="getReplyComments1(' +
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        onclick="getReplyComments1(' +
                                                         taskComment.id +
                                                         ');"> \
-                                                                                                                                                                                                    <i class="mdi mdi-arrow-down"></i> \
-                                                                                                                                                                                                    Xem ' +
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <i class="mdi mdi-arrow-down"></i> \
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        Xem ' +
                                                         taskComment.replyCount +
                                                         ' phản hồi \
-                                                                                                                                                                                                </a>';
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </a>';
                                                 }
 
                                                 html += '       <div id="child_' + taskComment.id +
                                                     '"></div> \
-                                                                                                                                                                                                </div> \
-                                                                                                                                                                                            </div>';
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </div> \
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                </div>';
                                             });
 
                                             // Hiển thị dữ liệu trong phần tử div
@@ -468,10 +472,10 @@
                                             data.map(function(taskComment) {
                                                 html +=
                                                     '<div class="d-flex align-items-start mt-3"> \
-                                        <img class="me-2 rounded-circle" src="/assets/images/users/avatar-5.jpg" \
-                                            alt="Generic placeholder image" height="32"> \
-                                        <div class="flex-1"> \
-                                            <h5 class="mt-0">' +
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <img class="me-2 rounded-circle" src="/assets/images/users/avatar-5.jpg" \
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                alt="Generic placeholder image" height="32"> \
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <div class="flex-1"> \
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <h5 class="mt-0">' +
                                                     taskComment.user.name;
 
                                                 if (taskComment.user.id == taskComment.user.id) {
@@ -481,16 +485,16 @@
                                                 html += '           <small class="text-muted fw-normal float-end">' +
                                                     taskComment.diffForHumansInVietnam +
                                                     '</small> \
-                                        </h5> \
-                                        ' +
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            </h5> \
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            ' +
                                                     taskComment.content +
                                                     ' \
-                                        <br />';
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <br />';
 
                                                 html += '       <div id="child_' + taskComment.id +
                                                     '"></div> \
-                                        </div> \
-                                    </div>';
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            </div> \
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        </div>';
                                             });
 
                                             // Hiển thị dữ liệu trong phần tử div
@@ -501,12 +505,65 @@
                                             console.error(error);
                                         }
                                     });
+                                };
+                                var page_id_count = 1;
+
+                                function pagination(page_id, task_id) {
+                                    // Gửi yêu cầu AJAX POST
+                                    var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+                                    $.ajax({
+                                        url: '{{ route('taskcomment.pagination') }}',
+                                        method: 'POST',
+                                        data: {
+                                            pageId: page_id_count,
+                                            taskId: task_id,
+                                            _token: csrfToken // Thêm mã CSRF vào yêu cầu
+                                        },
+                                        success: function(response) {
+                                            console.log(response.taskComments);
+                                            var taskComments = response.taskComments.taskComments;
+                                            var paginationDiv = document.getElementById('pagination');
+
+
+
+
+                                            // Iterate over the taskComments and append them to the paginationDiv
+                                            taskComments.forEach(function(taskComment) {
+                                                var commentDiv = document.createElement('div');
+                                                commentDiv.className = 'd-flex align-items-start mt-3';
+                                                commentDiv.innerHTML = `
+            <img class="me-2 rounded-circle" src="/assets/images/users/avatar-5.jpg" alt="Generic placeholder image" height="32">
+            <div class="flex-1">
+                <h5 class="mt-0">${taskComment.user.name}${taskComment.user.id == taskComment.user.id ? '<span style="color: red">(you)</span>' : ''}
+                    <small class="text-muted fw-normal float-end">${taskComment.diffForHumansInVietnam}</small>
+                </h5>
+                ${taskComment.content}
+                <br />
+                <a href="javascript:void(0);" class="text-muted font-13 d-inline-block mt-2" onclick="setReplyId(${taskComment.id}, '${taskComment.user.name}');">
+                    <i class="mdi mdi-reply"></i> Reply
+                </a>
+                ${taskComment.replyCount > 0 ?
+                    `<a href="javascript:void(0);" class="text-muted font-13 d-inline-block mt-2" onclick="getReplyComments(${taskComment.id});">
+                                                                                                                                                                                                                            <i class="mdi mdi-arrow-down"></i>
+                                                                                                                                                                                                                            Xem ${taskComment.replyCount} phản hồi
+                                                                                                                                                                                                                        </a>` : ''}
+                <div id="child_${taskComment.id}"></div>
+            </div>
+        `;
+
+                                                paginationDiv.appendChild(commentDiv);
+                                            });
+                                            page_id_count++;
+                                        },
+                                        error: function(xhr, status, error) {
+                                            // Xử lý lỗi
+                                            console.error(error);
+                                        }
+                                    });
                                 }
                             </script>
-                            <div class="text-center mt-2">
-                                <a href="javascript:void(0);" class="text-danger"><i
-                                        class="mdi mdi-spin mdi-loading me-1"></i> Load more </a>
-                            </div>
+
 
                             <style>
                                 #boldText {

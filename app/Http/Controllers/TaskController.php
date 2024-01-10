@@ -63,6 +63,7 @@ class TaskController extends BaseController
 			->where('task_id', $request->id)
 			->where('reply_id', 0)
 			->orderBy('created_at', 'desc')
+			->take(3)
 			->get();
 
 		// Chuyển đổi múi giờ và định dạng thời gian cho mỗi TaskComment
