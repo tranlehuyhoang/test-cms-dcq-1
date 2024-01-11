@@ -506,7 +506,7 @@
                                                     _token: csrfToken // Thêm mã CSRF vào yêu cầu
                                                 },
                                                 success: function(response) {
-                                                    var data = response.taskcomment;
+                                                    var data = response.html;
                                                     // Xử lý dữ liệu phản hồi sau khi gửi biểu mẫu thành công
                                                     console.log(response);
 
@@ -515,32 +515,9 @@
                                                     $('#reply_id').val('0');
 
                                                     // Tạo HTML cho comment mới
-                                                    var html = `
-                      <div class="d-flex align-items-start mt-3">
-                          <img class="me-2 rounded-circle" src="/assets/images/users/avatar-5.jpg" alt="Generic placeholder image" height="32">
-                          <div class="flex-1">
-                              <h5 class="mt-0">${data.user.name}
-                                  <small class="text-muted fw-normal float-end">${data.diffForHumansInVietnam}</small>
-                              </h5>
-                              ${data.content}
-                              <br />
-                  `;
 
-                                                    if (!data.can_reply) {
-                                                        html += `
-                          <a href="javascript:void(0);" class="text-muted font-13 d-inline-block mt-2" onclick="setReplyId(${data.id}, '${data.user.name}');">
-                              <i class="mdi mdi-reply"></i> Reply
-                          </a>
-                      `;
-                                                    }
 
-                                                    html += `
-                              <div id="child_${data.id}"></div>
-                          </div>
-                      </div>
-                  `;
-
-                                                    $('#child_' + reply_id).html(html);
+                                                    $('#child_' + reply_id).html(response.html);
                                                 },
                                                 error: function(xhr, status, error) {
                                                     // Xử lý lỗi nếu có

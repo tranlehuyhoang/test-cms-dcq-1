@@ -45,10 +45,10 @@ class TaskCommentController extends Controller
         $hasReply_id_level_2 = TaskComment::where('id', $request->input('reply_id'))->first();
         $hasReply_id_level_3 = $hasReply_id_level_2 ? TaskComment::where('id', $hasReply_id_level_2->reply_id)->exists() : false;
         $taskcomment->can_reply = $hasReply_id_level_3;
-        $data['html'] = view('taskcomment.comment', ['taskComment' => $taskcomment])->render();
+        $html = view('taskcomment.comment', ['taskComment' => $taskcomment])->render();
 
         // Trả về dữ liệu TaskComment đã tạo thành công
-        return response()->json(['taskcomment' => $taskcomment], 200);
+        return response()->json(['html' => $html], 200);
     }
 
     public function getcommentlevel2(Request $request)
