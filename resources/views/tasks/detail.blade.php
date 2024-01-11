@@ -479,40 +479,10 @@
                                             _token: csrfToken // Thêm mã CSRF vào yêu cầu
                                         },
                                         success: function(response) {
-                                            console.log(response.taskComments);
-                                            var taskComments = response.taskComments;
+                                            var taskCommentsHTML = response.html;
                                             var paginationDiv = document.getElementById('pagination');
 
-                                            taskComments.forEach(function(taskComment) {
-                                                var commentDiv = document.createElement('div');
-                                                commentDiv.className = 'd-flex align-items-start mt-3';
-                                                var replyLinkHtml = '';
-                                                if (taskComment.replyCount > 0) {
-                                                    replyLinkHtml = `
-                                                           <a href="javascript:void(0);" class="text-muted font-13 d-inline-block mt-2" onclick="getReplyComments_level_2(${taskComment.id});">
-                                                               <i class="mdi mdi-arrow-down"></i> Xem ${taskComment.replyCount} phản hồi
-                                                           </a>`;
-                                                }
-
-                                                var commentDiv = document.createElement('div');
-                                                commentDiv.className = 'd-flex align-items-start mt-3';
-                                                commentDiv.innerHTML = `
-                                                     <img class="me-2 rounded-circle" src="/assets/images/users/avatar-5.jpg" alt="Generic placeholder image" height="32">
-                                                     <div class="flex-1">
-                                                         <h5 class="mt-0">${taskComment.user.name}
-                                                             <small class="text-muted fw-normal float-end">${taskComment.diffForHumansInVietnam}</small>
-                                                         </h5>
-                                                         ${taskComment.content}
-                                                         <br />
-                                                         <a href="javascript:void(0);" class="text-muted font-13 d-inline-block mt-2" onclick="setReplyId(${taskComment.id}, '${taskComment.user.name}');">
-                                                             <i class="mdi mdi-reply"></i> Reply
-                                                         </a>
-                                                         ${replyLinkHtml}
-                                                         <div id="child_${taskComment.id}"></div>
-                                                     </div>`;
-
-                                                paginationDiv.appendChild(commentDiv);
-                                            });
+                                            paginationDiv.innerHTML += taskCommentsHTML;
                                             page_id_count++;
                                         },
                                         error: function(xhr, status, error) {

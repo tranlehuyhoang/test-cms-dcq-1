@@ -113,8 +113,8 @@ class TaskCommentController extends Controller
 
         $taskComments = TaskComment::with('user')
             ->where('task_id', $task_id)
-            ->where('reply_id', 0)
-            ->orderBy('created_at', 'desc')
+            ->where('reply_id', TaskComment::DEFAULT_COMMENTS)
+            ->orderBy('created_at', TaskComment::SORT_COMMENTS)
             ->skip($id_pagination * TaskComment::LIMIT_COMMENTS)
             ->take(TaskComment::LIMIT_COMMENTS)
             ->get();
@@ -129,7 +129,10 @@ class TaskCommentController extends Controller
             return response()->json(['message' => 'Task comment not found'], 404);
         }
 
-        return response()->json(['taskComments' => $taskComments], 200);
+        // Render view và trả về HTML
+        $html = view('taskcomment.pagination', ['taskComments' => $taskComments])->render();
+
+        return response()->json(['html' => $html], 200);
     }
 
     public function show(TaskComment $taskComment)

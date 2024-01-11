@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class TaskComment extends Model
 {
     // số comments hiện lần đầu
+    const DEFAULT_COMMENTS = 0;
+    const SORT_COMMENTS = 'desc';
     const START_COMMENTS = 3;
     const LIMIT_COMMENTS = 3;
 
