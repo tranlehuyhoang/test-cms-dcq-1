@@ -28,16 +28,6 @@ class TaskCommentController extends Controller
     public function store(Request $request)
     {
         $user_id = Auth::user()->id;
-        $validator = Validator::make($request->all(), [
-            'task_id' => 'required|max:255',
-            'content' => 'required|max:255',
-            'reply_id' => 'required|max:255',
-        ]);
-
-        if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
-        }
-
         $taskcomment = new TaskComment();
         $taskcomment->create_by = $user_id;
         $taskcomment->task_id = $request->input('task_id');
@@ -45,8 +35,20 @@ class TaskCommentController extends Controller
         $taskcomment->reply_id = $request->input('reply_id');
         $taskcomment->save();
 
-        // Chuyển hướng về trang danh sách task comments hoặc trang chi tiết task comment vừa tạo
-        return redirect()->back();
+        // Truy vấn thông tin người dùng liên quan đến TaskComment
+        $taskcomment->user = User::find($user_id);
+
+        $createdDate = \Carbon\Carbon::parse($taskcomment->created_at)->setTimezone('Asia/Ho_Chi_Minh');
+        $taskcomment->diffForHumansInVietnam = $createdDate->diffForHumans();
+
+        // Kiểm tra xem có TaskComment nào có id giống với reply_id không
+        $hasReply_id_level_2 = TaskComment::where('id', $request->input('reply_id'))->first();
+        $hasReply_id_level_3 = $hasReply_id_level_2 ? TaskComment::where('id', $hasReply_id_level_2->reply_id)->exists() : false;
+        $taskcomment->can_reply = $hasReply_id_level_3;
+        $data['html'] = view('taskcomment.comment', ['taskComment' => $taskcomment])->render();
+
+        // Trả về dữ liệu TaskComment đã tạo thành công
+        return response()->json(['taskcomment' => $taskcomment], 200);
     }
 
     public function getcommentlevel2(Request $request)

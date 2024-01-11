@@ -455,11 +455,11 @@
                             </style>
                             <div class="border rounded mt-4">
                                 <span id="boldText"></span>
-                                <form action="{{ route('taskcomment.create') }}" class="comment-area-box"
-                                    method="POST">
-                                    @csrf
-                                    <input type="number" hidden name="task_id" value="{{ $task_id }}">
-                                    <input type="number" hidden name="reply_id" value="0" id="reply_id">
+                                <form id="comment-form" class="comment-area-box">
+                                    <input type="number" hidden name="task_id" id="task_id"
+                                        value="{{ $task_id }}">
+                                    <input type="number" hidden name="reply_id" id="reply_id" value="0"
+                                        id="reply_id">
 
                                     <textarea name="content" id="comment_content" rows="3" class="form-control border-0 resize-none"
                                         placeholder="Your comment..."></textarea>
@@ -482,6 +482,73 @@
                                         var boldText = document.getElementById('boldText');
                                         document.getElementById('comment_content').value = '@' + userName + ' : ';
                                     }
+
+                                    $(document).ready(function() {
+                                        $('#comment-form').submit(function(e) {
+                                            e.preventDefault(); // Ngăn chặn hành vi mặc định của biểu mẫu
+
+                                            var formData = $(this).serialize(); // Chuyển đổi dữ liệu biểu mẫu thành chuỗi query
+                                            var csrfToken = $('meta[name="csrf-token"]').attr(
+                                                'content'); // Sử dụng phương thức attr() để lấy giá trị thuộc tính content
+
+                                            // Lấy giá trị của các trường dữ liệu
+                                            var task_id = $('#task_id').val();
+                                            var content = $('#comment_content').val();
+                                            var reply_id = $('#reply_id').val();
+
+                                            $.ajax({
+                                                url: "{{ route('taskcomment.create') }}",
+                                                type: "POST",
+                                                data: {
+                                                    task_id: task_id,
+                                                    content: content,
+                                                    reply_id: reply_id,
+                                                    _token: csrfToken // Thêm mã CSRF vào yêu cầu
+                                                },
+                                                success: function(response) {
+                                                    var data = response.taskcomment;
+                                                    // Xử lý dữ liệu phản hồi sau khi gửi biểu mẫu thành công
+                                                    console.log(response);
+
+                                                    // Reset nội dung của các trường dữ liệu
+                                                    $('#comment_content').val('');
+                                                    $('#reply_id').val('0');
+
+                                                    // Tạo HTML cho comment mới
+                                                    var html = `
+                      <div class="d-flex align-items-start mt-3">
+                          <img class="me-2 rounded-circle" src="/assets/images/users/avatar-5.jpg" alt="Generic placeholder image" height="32">
+                          <div class="flex-1">
+                              <h5 class="mt-0">${data.user.name}
+                                  <small class="text-muted fw-normal float-end">${data.diffForHumansInVietnam}</small>
+                              </h5>
+                              ${data.content}
+                              <br />
+                  `;
+
+                                                    if (!data.can_reply) {
+                                                        html += `
+                          <a href="javascript:void(0);" class="text-muted font-13 d-inline-block mt-2" onclick="setReplyId(${data.id}, '${data.user.name}');">
+                              <i class="mdi mdi-reply"></i> Reply
+                          </a>
+                      `;
+                                                    }
+
+                                                    html += `
+                              <div id="child_${data.id}"></div>
+                          </div>
+                      </div>
+                  `;
+
+                                                    $('#child_' + reply_id).html(html);
+                                                },
+                                                error: function(xhr, status, error) {
+                                                    // Xử lý lỗi nếu có
+                                                    console.error(error);
+                                                }
+                                            });
+                                        });
+                                    });
                                 </script>
                             </div> <!-- end .border-->
 
