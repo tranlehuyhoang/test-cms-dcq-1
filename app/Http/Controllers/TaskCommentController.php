@@ -76,6 +76,8 @@ class TaskCommentController extends Controller
         }
 
         $taskComment = TaskComment::find($taskCommentId);
+
+        $data['html'] = view('taskcomment.comment_level_2', ['taskComments' => $data['taskComments']])->render();
         if ($taskComment) {
             $replyComments = $taskComment->replyComments;
             return response()->json(['replyComments' => $data], 200);
@@ -83,6 +85,8 @@ class TaskCommentController extends Controller
             return response()->json(['message' => 'Task comment not found'], 404);
         }
     }
+
+
     public function getcommentlevel3(Request $request)
     {
         $taskCommentId = $request->input('taskCommentId');
@@ -103,8 +107,9 @@ class TaskCommentController extends Controller
         }
 
         $replyComments = TaskComment::find($taskCommentId)->replyComments;
+        $html = view('taskcomment.comment_level_3', ['taskComments' => $taskComments])->render();
 
-        return response()->json(['taskComments' => $taskComments, 'replyComments' => $replyComments], 200);
+        return response()->json(['taskComments' => $taskComments, 'replyComments' => $replyComments, 'html' => $html], 200);
     }
     public function pagination(Request $request)
     {
