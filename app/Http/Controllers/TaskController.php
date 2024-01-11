@@ -56,7 +56,6 @@ class TaskController extends BaseController
 
 		$data['taskComments'] = TaskComment::where('task_id', '=', $request->id)->get();
 
-		$data['users'] = User::whereIn('id', $data['taskComments']->pluck('create_by'))->get();
 		$data['user_id'] =  Auth::user()->id;
 
 		$data['taskComments'] = TaskComment::with('user')

@@ -6,6 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class TaskComment extends Model
 {
+    // số comments hiện lần đầu
+    const START_COMMENTS = 3;
+    const LIMIT_COMMENTS = 3;
+
     protected $fillable = ['task_id', 'create_by', 'content', 'reply_id'];
 
     public function task()
