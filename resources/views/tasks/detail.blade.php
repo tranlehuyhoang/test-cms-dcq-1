@@ -358,7 +358,7 @@
 
                                         @if ($taskComment->replyCount > 0)
                                             <a href="javascript:void(0);" class="text-muted font-13 d-inline-block mt-2"
-                                                onclick="getReplyComments_level_3({{ $taskComment->id }});">
+                                                onclick="getReplyComments_level_2({{ $taskComment->id }});">
                                                 <i class="mdi mdi-arrow-down"></i>
                                                 Xem {{ $taskComment->replyCount }} phản hồi
                                             </a>
@@ -374,7 +374,7 @@
                             </div>
 
                             <script>
-                                function getReplyComments_level_3(taskCommentId) {
+                                function getReplyComments_level_2(taskCommentId) {
                                     // Gửi yêu cầu AJAX POST
                                     var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
@@ -489,9 +489,9 @@
                                                 var replyLinkHtml = '';
                                                 if (taskComment.replyCount > 0) {
                                                     replyLinkHtml = `
-                                                               <a href="javascript:void(0);" class="text-muted font-13 d-inline-block mt-2" onclick="getReplyComments_level_3(${taskComment.id});">
-                                                                   <i class="mdi mdi-arrow-down"></i> Xem ${taskComment.replyCount} phản hồi
-                                                               </a>`;
+                                                           <a href="javascript:void(0);" class="text-muted font-13 d-inline-block mt-2" onclick="getReplyComments_level_2(${taskComment.id});">
+                                                               <i class="mdi mdi-arrow-down"></i> Xem ${taskComment.replyCount} phản hồi
+                                                           </a>`;
                                                 }
 
                                                 var commentDiv = document.createElement('div');
