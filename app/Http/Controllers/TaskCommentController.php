@@ -48,7 +48,7 @@ class TaskCommentController extends Controller
         $html = view('taskcomment.comment', ['taskComment' => $taskcomment])->render();
 
         // Trả về dữ liệu TaskComment đã tạo thành công
-        return response()->json(['html' => $html], 200);
+        return response()->json(['html' => $html, 'reply_id' => $taskcomment->reply_id], 200);
     }
 
     public function getcommentlevel2(Request $request)

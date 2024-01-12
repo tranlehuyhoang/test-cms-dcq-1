@@ -507,6 +507,7 @@
                                                 },
                                                 success: function(response) {
                                                     var data = response.html;
+                                                    var reply_id = response.reply_id;
                                                     // Xử lý dữ liệu phản hồi sau khi gửi biểu mẫu thành công
                                                     console.log(response);
 
@@ -514,10 +515,16 @@
                                                     $('#comment_content').val('');
                                                     $('#reply_id').val('0');
 
+                                                    if (reply_id == 0) {
+                                                        $('.clerfix').html(response.html);
+
+                                                    } else {
+                                                        $('#child_' + reply_id).html(response.html);
+
+                                                    }
                                                     // Tạo HTML cho comment mới
 
 
-                                                    $('#child_' + reply_id).html(response.html);
                                                 },
                                                 error: function(xhr, status, error) {
                                                     // Xử lý lỗi nếu có
